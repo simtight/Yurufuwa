@@ -110,16 +110,41 @@ public class PlayerMove : MonoBehaviour
         {
             rb.velocity = new Vector2(0.0f,vector2.y);
         }
+        if (isLeft) vector2.x -= 1.0f;
+        if (isRight) vector2.x += 1.0f;
+        vector2.x *= speed;
+        Walk();
 
         
 
-        if (isLeft ^ isRight)
+        //
+        //ジャンプ
+        //
+        if (fixedFrameCount<100)
         {
-            if (isLeft) vector2.x -= 1.0f;
-            if (isRight) vector2.x += 1.0f;
+            fixedFrameCount++;
         }
-        vector2.x *= speed;
+        if (isGround && fixedFrameCount > 0 && fixedFrameCount < 4)
+        {
+            isJump = true;
+        }
+        if (!upNow)
+        {
+            isJump = false;
+        }
+        if (isJump&&fixedFrameCount<jumpFrameLimit)
+        {
+            rb.velocity = new Vector2(rb.velocity.x,jumpVelocity);
+        }
+    }
 
+    //+---------------------------------method
+    //|関数説明
+    //|移動の関数です
+    //|
+    //+-------------------------------
+    private void Walk()
+    {
 
         //
         //接地中と空中の走り
@@ -191,31 +216,10 @@ public class PlayerMove : MonoBehaviour
                     }
                 }
             }
-
-
-
-        }
-
-        //
-        //ジャンプ
-        //
-        if (fixedFrameCount<100)
-        {
-            fixedFrameCount++;
-        }
-        if (isGround && fixedFrameCount > 0 && fixedFrameCount < 4)
-        {
-            isJump = true;
-        }
-        if (!upNow)
-        {
-            isJump = false;
-        }
-        if (isJump&&fixedFrameCount<jumpFrameLimit)
-        {
-            rb.velocity = new Vector2(rb.velocity.x,jumpVelocity);
         }
     }
+
+
 
     //+---------------------------------method
     //|関数説明
