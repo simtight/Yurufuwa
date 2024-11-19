@@ -114,6 +114,7 @@ public class PlayerMove : MonoBehaviour
         if (isRight) vector2.x += 1.0f;
         vector2.x *= speed;
         Walk();
+        if(!(isLeft^isRight)) rb.velocity = new Vector2(0f,rb.velocity.y);
 
         
 
