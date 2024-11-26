@@ -22,11 +22,9 @@ public class PlayerMove : MonoBehaviour
     private BoxCollider2D isGroundBoxCollider2D;
     //プレイヤーのRigidbody
     private Rigidbody2D rb;
-
     //設置判定のゲームオブジェクト
     [SerializeField]
     private GameObject isGroundObject;
-
     //プレイヤーのmass
     private float mass;
     //-----------------------------------------------------
@@ -50,9 +48,7 @@ public class PlayerMove : MonoBehaviour
     //速さ
     private const float speed = 30.0f;
     //ジャンプ力
-    private const float jumpVelocity = 3.0f;
-    //ジャンプのフレーム
-    private const float jumpFrameLimit = 20.0f;
+    private const float jumpForce = 250.0f;
     //----------------------------------------------------
 
 
@@ -60,8 +56,6 @@ public class PlayerMove : MonoBehaviour
     //接地判定--------------------------------------------
     //接地中フラグ
     private bool isGround = false;
-    //ジャンプ中フラグ
-    private bool isJump = false;
     //----------------------------------------------------
 
 
@@ -71,11 +65,7 @@ public class PlayerMove : MonoBehaviour
     //右移動フラグ
     private bool isRight = false;
     //ジャンプキーを押した時のフラグ
-    //private bool isUp = false;
-    //ジャンプキーを押し続けてるフラグ
-    private bool upNow = false;
-    //壁ジャンプのフラグ
-    //private bool wallJamp = false;
+    private bool canJump = false;
     //キーを押してないフラグ
     private bool notKey = false;
     //プレーヤー移動用のベクトル
@@ -116,26 +106,14 @@ public class PlayerMove : MonoBehaviour
         Walk();
         if(!(isLeft^isRight)) rb.velocity = new Vector2(0f,rb.velocity.y);
 
-        
 
         //
         //ジャンプ
         //
-        if (fixedFrameCount<100)
+        if (canJump && isGround)
         {
-            fixedFrameCount++;
-        }
-        if (isGround && fixedFrameCount > 0 && fixedFrameCount < 4)
-        {
-            isJump = true;
-        }
-        if (!upNow)
-        {
-            isJump = false;
-        }
-        if (isJump&&fixedFrameCount<jumpFrameLimit)
-        {
-            rb.velocity = new Vector2(rb.velocity.x,jumpVelocity);
+            canJump = false;
+            rb.AddForce(new Vector2(0.0f, jumpForce));
         }
     }
 
@@ -243,34 +221,7 @@ public class PlayerMove : MonoBehaviour
         //ジャンプ
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            if (isGround)
-            {
-                isJump = true;
-                fixedFrameCount = 0;
-
-            }
-            if (!isGround)
-            {
-                //isUp = true;
-                fixedFrameCount = 0;
-            }
-        }
-        if (Input.GetKey(KeyCode.Space))
-        {
-            if(fixedFrameCount < 4)
-            {
-                //isUp = false;
-            }
-            upNow = true;
-        }
-        else
-        {
-            //isUp = false;
-            if (isJump)
-            {
-                upNow = false;
-            }
-
+            canJump = true;
         }
     }
 
