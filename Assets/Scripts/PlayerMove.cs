@@ -73,6 +73,19 @@ public class PlayerMove : MonoBehaviour
     //----------------------------------------------------
 
 
+    //
+    private enum Bullet
+    {
+        shield,
+        spread,
+        penetrate
+    }
+    //’e”­ŽË
+    private bool isBullet = false;
+    //
+    private int kindsBullet = 0;
+
+
 
     // Start is called before the first frame update
     void Start()
@@ -222,6 +235,32 @@ public class PlayerMove : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Space))
         {
             canJump = true;
+        }
+        if (Input.GetKeyDown(KeyCode.I))
+        {
+            if(kindsBullet <= 0)
+            {
+                kindsBullet = 2;
+            }
+            else
+            {
+                kindsBullet--;
+            }
+        }
+        if (Input.GetKeyDown(KeyCode.O))
+        {
+            if(kindsBullet >= 2)
+            {
+                kindsBullet = 0;
+            }
+            else
+            {
+                kindsBullet++;
+            }
+        }
+        if (Input.GetKeyDown(KeyCode.P))
+        {
+            isBullet = true;
         }
     }
 
