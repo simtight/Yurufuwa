@@ -11,6 +11,7 @@
 //|âLéî
 //|
 //+-------------------------------
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -72,6 +73,13 @@ public class PlayerMove : MonoBehaviour
     private Vector2 vector2 = Vector2.zero;
     //----------------------------------------------------
 
+    //íe--------------------------------------------------
+       //íeî≠éÀ
+    private bool isBullet = false;
+    //
+    private int kindsBullet = 0;
+    //----------------------------------------------------
+
 
     //
     private enum Bullet
@@ -80,12 +88,6 @@ public class PlayerMove : MonoBehaviour
         spread,
         penetrate
     }
-    //íeî≠éÀ
-    private bool isBullet = false;
-    //
-    private int kindsBullet = 0;
-
-
 
     // Start is called before the first frame update
     void Start()
@@ -119,7 +121,6 @@ public class PlayerMove : MonoBehaviour
         Walk();
         if(!(isLeft^isRight)) rb.velocity = new Vector2(0f,rb.velocity.y);
 
-
         //
         //ÉWÉÉÉìÉv
         //
@@ -127,6 +128,28 @@ public class PlayerMove : MonoBehaviour
         {
             canJump = false;
             rb.AddForce(new Vector2(0.0f, jumpForce));
+        }
+        ///
+        ///
+        ///
+        if(isBullet)
+        {
+            isBullet = false;
+            switch(kindsBullet)
+            {
+                //
+                case 0:
+                    Debug.Log("Bullet.shield");
+                    break;
+                //
+                case 1:
+                    Debug.Log("Bullet.spread");
+                    break;
+                //
+                case 2:
+                    Debug.Log("Bullet.penetrate");
+                    break;
+            }
         }
     }
 
@@ -220,6 +243,7 @@ public class PlayerMove : MonoBehaviour
     //+-------------------------------
     private void ProcessInput()
     {
+        int maxBullet = Enum.GetValues(typeof(Bullet)).Length - 1;
         //ç∂âEà⁄ìÆ
         isLeft = false;
         isRight = false;
@@ -236,11 +260,12 @@ public class PlayerMove : MonoBehaviour
         {
             canJump = true;
         }
+        //íeÇÃéÌóﬁÇÃëJà⁄
         if (Input.GetKeyDown(KeyCode.I))
         {
             if(kindsBullet <= 0)
             {
-                kindsBullet = 2;
+                kindsBullet = maxBullet;
             }
             else
             {
@@ -249,7 +274,7 @@ public class PlayerMove : MonoBehaviour
         }
         if (Input.GetKeyDown(KeyCode.O))
         {
-            if(kindsBullet >= 2)
+            if (kindsBullet >= maxBullet)
             {
                 kindsBullet = 0;
             }
